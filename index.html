@@ -3,9 +3,519 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>The Journey of a Developer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&family=Source+Code+Pro:wght@400;700&display=swap');
+        
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6584;
+            --dark: #2D3748;
+            --light: #F7FAFC;
+            --accent: #48BB78;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: var(--light);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(108, 99, 255, 0.3);
+            animation: pulse 2s infinite alternate;
+        }
+        
+        .countdown {
+            font-size: 5rem;
+            font-weight: 900;
+            font-family: 'Source Code Pro', monospace;
+            margin: 2rem 0;
+            color: var(--primary);
+            text-shadow: 0 0 15px rgba(108, 99, 255, 0.7);
+        }
+        
+        .quote-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s ease;
+        }
+        
+        .quote {
+            font-size: 1.8rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+        
+        .author {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: var(--accent);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 5px;
+            transition: width 1s linear;
+        }
+        
+        .final-message {
+            font-size: 2rem;
+            margin: 2rem 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease;
+        }
+        
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                text-shadow: 0 0 10px rgba(108, 99, 255, 0.5);
+            }
+            100% {
+                text-shadow: 0 0 20px rgba(108, 99, 255, 0.8), 0 0 30px rgba(108, 99, 255, 0.4);
+            }
+        }
+        
+        .code-snippet {
+            font-family: 'Source Code Pro', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            text-align: left;
+            border-left: 3px solid var(--accent);
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.5s ease;
+        }
+        
+        .code-snippet.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .highlight {
+            color: var(--accent);
+        }
+        
+        .blink {
+            animation: blink 1s step-end infinite;
+        }
+        
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        
+        .final-reveal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 2s ease;
+        }
+        
+        .final-reveal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .final-reveal h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            max-width: 800px;
+        }
+        
+        .launch-button {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.4);
+        }
+        
+        .launch-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.6);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .countdown {
+                font-size: 3rem;
+            }
+            
+            .quote {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>uiy8ftcrtxd</h1>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <h1>The Developer's Journey</h1>
+        <div class="countdown" id="countdown">30</div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+        
+        <div class="quote-container">
+            <p class="quote" id="quote">Loading motivational fuel for your coding journey...</p>
+            <p class="author" id="author"></p>
+        </div>
+        
+        <div class="code-snippet" id="code-snippet">
+            <span class="highlight">while</span> (<span class="highlight">!success</span>) {<br>
+            &nbsp;&nbsp;<span class="highlight">try</span> {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight">workHard</span>();<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight">learnMore</span>();<br>
+            &nbsp;&nbsp;} <span class="highlight">catch</span> (error) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight">debug</span>();<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight">persist</span>();<br>
+            &nbsp;&nbsp;}<br>
+            }
+        </div>
+        
+        <div class="final-message" id="final-message"></div>
+    </div>
+    
+    <div class="final-reveal" id="final-reveal">
+        <h2>After countless late nights, debugging sessions, and cups of coffee...</h2>
+        <h2>Your hard work has materialized into something amazing!</h2>
+        <button class="launch-button" id="launch-button">Launch My Project</button>
+    </div>
+
+    <script>
+        // Motivational quotes for developers
+        const quotes = [
+            {
+                quote: "The most disastrous thing that you can ever learn is your first programming language.",
+                author: "Alan Kay"
+            },
+            {
+                quote: "The only way to learn a new programming language is by writing programs in it.",
+                author: "Dennis Ritchie"
+            },
+            {
+                quote: "Sometimes it pays to stay in bed on Monday, rather than spending the rest of the week debugging Monday's code.",
+                author: "Dan Salomon"
+            },
+            {
+                quote: "Programming isn't about what you know; it's about what you can figure out.",
+                author: "Chris Pine"
+            },
+            {
+                quote: "The best error message is the one that never shows up.",
+                author: "Thomas Fuchs"
+            },
+            {
+                quote: "First, solve the problem. Then, write the code.",
+                author: "John Johnson"
+            },
+            {
+                quote: "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
+                author: "Martin Fowler"
+            },
+            {
+                quote: "The most important property of a program is whether it accomplishes the intention of its user.",
+                author: "C.A.R. Hoare"
+            },
+            {
+                quote: "Programming is the art of telling another human what one wants the computer to do.",
+                author: "Donald Knuth"
+            },
+            {
+                quote: "The computer was born to solve problems that did not exist before.",
+                author: "Bill Gates"
+            },
+            {
+                quote: "Every great developer you know got there by solving problems they were unqualified to solve until they actually did it.",
+                author: "Patrick McKenzie"
+            },
+            {
+                quote: "No matter how slow you are, you're still lapping everyone on the couch.",
+                author: "Unknown"
+            },
+            {
+                quote: "The expert in anything was once a beginner.",
+                author: "Helen Hayes"
+            },
+            {
+                quote: "The only way to do great work is to love what you do.",
+                author: "Steve Jobs"
+            },
+            {
+                quote: "Your limitation—it's only your imagination.",
+                author: "Unknown"
+            },
+            {
+                quote: "Push yourself, because no one else is going to do it for you.",
+                author: "Unknown"
+            },
+            {
+                quote: "Great things never come from comfort zones.",
+                author: "Unknown"
+            },
+            {
+                quote: "Dream it. Wish it. Do it.",
+                author: "Unknown"
+            },
+            {
+                quote: "Success doesn't just find you. You have to go out and get it.",
+                author: "Unknown"
+            },
+            {
+                quote: "The harder you work for something, the greater you'll feel when you achieve it.",
+                author: "Unknown"
+            },
+            {
+                quote: "Wake up with determination. Go to bed with satisfaction.",
+                author: "Unknown"
+            },
+            {
+                quote: "Do something today that your future self will thank you for.",
+                author: "Unknown"
+            },
+            {
+                quote: "Little things make big days.",
+                author: "Unknown"
+            },
+            {
+                quote: "It's going to be hard, but hard does not mean impossible.",
+                author: "Unknown"
+            },
+            {
+                quote: "Don't stop when you're tired. Stop when you're done.",
+                author: "Unknown"
+            }
+        ];
+
+        // Code snippets for developers
+        const codeSnippets = [
+            `// This code represents your persistence\nfunction neverGiveUp() {\n  while(!succeed) {\n    tryAgain();\n    learnFromMistakes();\n  }\n  celebrate();\n}`,
+            `# Your growth as a developer\nwhile True:\n    knowledge += learn()\n    if bugs_found > 0:\n        debug()\n    else:\n        deploy()`,
+            `/* The journey of 1000 apps \nbegins with a single line of code */\nconsole.log("Hello World!");`,
+            `// Debugging formula\nconst solution = (problem) => {\n  return patience + persistence \n    + googleSearch(problem);\n}`,
+            `# Coffee to code ratio\ndef productivity(hours):\n    return hours * 2 \n    if coffee_consumed > 0 \n    else hours / 2`
+        ];
+
+        // Final messages for the reveal
+        const finalMessages = [
+            "Behind this project are countless hours of learning...",
+            "Every error message you decoded led to this moment...",
+            "The stack overflow tabs you've opened were worth it...",
+            "Those late-night coding sessions are about to pay off...",
+            "Your persistence is about to be rewarded..."
+        ];
+
+        // DOM elements
+        const countdownEl = document.getElementById('countdown');
+        const progressEl = document.getElementById('progress');
+        const quoteEl = document.getElementById('quote');
+        const authorEl = document.getElementById('author');
+        const codeSnippetEl = document.getElementById('code-snippet');
+        const finalMessageEl = document.getElementById('final-message');
+        const finalRevealEl = document.getElementById('final-reveal');
+        const launchButtonEl = document.getElementById('launch-button');
+        const particlesEl = document.getElementById('particles');
+
+        // Create particles
+        function createParticles() {
+            for (let i = 0; i < 100; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 5 + 1;
+                const posX = Math.random() * window.innerWidth;
+                const delay = Math.random() * 10;
+                const duration = Math.random() * 20 + 10;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}px`;
+                particle.style.bottom = `-10px`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.opacity = Math.random() * 0.7 + 0.3;
+                
+                particlesEl.appendChild(particle);
+            }
+        }
+
+        // Show random quote
+        function showRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            quoteEl.textContent = quotes[randomIndex].quote;
+            authorEl.textContent = `— ${quotes[randomIndex].author}`;
+            
+            // Randomly show code snippet
+            if (Math.random() > 0.7) {
+                const randomCodeIndex = Math.floor(Math.random() * codeSnippets.length);
+                codeSnippetEl.textContent = codeSnippets[randomCodeIndex];
+                codeSnippetEl.classList.add('visible');
+                
+                // Hide after some time
+                setTimeout(() => {
+                    codeSnippetEl.classList.remove('visible');
+                }, 5000);
+            }
+        }
+
+        // Show final message
+        function showFinalMessage() {
+            const randomIndex = Math.floor(Math.random() * finalMessages.length);
+            finalMessageEl.textContent = finalMessages[randomIndex];
+            finalMessageEl.classList.add('visible');
+            
+            // Hide after some time
+            setTimeout(() => {
+                finalMessageEl.classList.remove('visible');
+            }, 3000);
+        }
+
+        // Start countdown
+        let timeLeft = 30;
+        const countdownInterval = setInterval(() => {
+            timeLeft--;
+            countdownEl.textContent = timeLeft;
+            
+            // Update progress bar
+            const progressPercent = (30 - timeLeft) / 30 * 100;
+            progressEl.style.width = `${progressPercent}%`;
+            
+            // Show random quote every 3 seconds
+            if (timeLeft % 3 === 0) {
+                showRandomQuote();
+            }
+            
+            // Show final message in last 10 seconds
+            if (timeLeft <= 10 && timeLeft % 2 === 0) {
+                showFinalMessage();
+            }
+            
+            // End countdown
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                showFinalReveal();
+            }
+        }, 1000);
+
+        // Show final reveal
+        function showFinalReveal() {
+            finalRevealEl.classList.add('active');
+        }
+
+        // Launch button event
+        launchButtonEl.addEventListener('click', () => {
+            window.location.href = 'https://past-papers-snowy.vercel.app/';
+        });
+
+        // Initialize
+        createParticles();
+        showRandomQuote();
+        codeSnippetEl.classList.add('visible');
+    </script>
 </body>
 </html>
